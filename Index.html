@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InstaFast Save - Instagram Reel & Video Downloader</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #0f172a url('https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=1000') center/cover no-repeat fixed;
+            color: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.92);
+            z-index: 0;
+        }
+
+        /* Header */
+        header {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            background: rgba(30, 41, 59, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 18px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+
+        .brand-title {
+            color: #38bdf8;
+            font-size: 1.4rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .brand-title span {
+            color: #ec4899;
+        }
+
+        /* Main Container */
+        .main-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 680px;
+            padding: 50px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+            text-align: center;
+        }
+
+        .hero-section h1 {
+            font-size: 2.3rem;
+            margin-bottom: 12px;
+            background: linear-gradient(90deg, #38bdf8, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-section p {
+            color: #94a3b8;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        /* Downloader Card */
+        .downloader-card {
+            background: rgba(30, 41, 59, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 30px;
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .url-input {
+            flex: 1;
+            background: rgba(15, 23, 42, 0.8);
+            border: 2px solid #475569;
+            border-radius: 12px;
+            padding: 14px 18px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .url-input:focus {
+            border-color: #38bdf8;
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, #0ea5e9, #2563eb);
+            color: white;
+            border: none;
+            padding: 0 28px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.4);
+            transition: transform 0.2s, opacity 0.2s;
+        }
+
+        .download-btn:hover {
+            opacity: 0.9;
+            transform: scale(1.02);
+        }
+
+        /* Result Area */
+        .result-box {
+            display: none;
+            margin-top: 10px;
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid #10b981;
+            border-radius: 14px;
+            padding: 20px;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .result-box p {
+            color: #34d399;
+            font-weight: bold;
+        }
+
+        .save-file-btn {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            text-decoration: none;
+            padding: 12px 30px;
+            border-radius: 10px;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+
+        /* Features Section */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .feature-item {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 20px 15px;
+            border-radius: 14px;
+            text-align: center;
+        }
+
+        .feature-item h4 {
+            color: #38bdf8;
+            font-size: 1rem;
+            margin-bottom: 6px;
+        }
+
+        .feature-item p {
+            color: #94a3b8;
+            font-size: 0.85rem;
+        }
+
+        footer {
+            position: relative;
+            z-index: 10;
+            margin-top: auto;
+            padding: 20px;
+            color: #64748b;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
+        @media(max-width: 600px) {
+            .input-group {
+                flex-direction: column;
+            }
+            .download-btn {
+                padding: 14px 0;
+            }
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="overlay"></div>
+
+    <header>
+        <div class="brand-title">📥 Insta<span>Fast</span></div>
+        <div style="font-size: 0.9rem; color: #94a3b8;">HD Reel Downloader</div>
+    </header>
+
+    <div class="main-container">
+
+        <div class="hero-section">
+            <h1>Instagram Reel Downloader</h1>
+            <p>Instagram reel ya video ka link paste karke HD quality me download karein.</p>
+        </div>
+
+        <!-- Downloader Card -->
+        <div class="downloader-card">
+            <div class="input-group">
+                <input type="text" id="reelUrl" class="url-input" placeholder="Paste Instagram link here...">
+                <button class="download-btn" onclick="processDownload()">Download</button>
+            </div>
+
+            <div class="result-box" id="resultBox">
+                <p>✅ Aapki Reel Download ke liye ready hai!</p>
+                <a id="downloadLink" href="#" target="_blank" class="save-file-btn">Download Video (MP4)</a>
+            </div>
+        </div>
+
+        <!-- Features Grid -->
+        <div class="features">
+            <div class="feature-item">
+                <h4>⚡ Fast Download</h4>
+                <p>Ek click me video tayar</p>
+            </div>
+            <div class="feature-item">
+                <h4>💎 HD Quality</h4>
+                <p>Original high resolution</p>
+            </div>
+            <div class="feature-item">
+                <h4>🔒 100% Free</h4>
+                <p>No login needed</p>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        Created by Rohan Rana (Anna) &copy; 2026. All rights reserved.
+    </footer>
+
+    <script>
+        function processDownload() {
+            const urlInput = document.getElementById('reelUrl').value.trim();
+            const resultBox = document.getElementById('resultBox');
+            const downloadLink = document.getElementById('downloadLink');
+
+            if (!urlInput.includes('instagram.com')) {
+                alert('Kripya ek sahi Instagram link paste karein!');
+                return;
+            }
+
+            resultBox.style.display = 'flex';
+            downloadLink.href = urlInput;
+            document.getElementById('reelUrl').value = '';
+        }
+    </script>
+</body>
+</html>
